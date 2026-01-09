@@ -47,13 +47,13 @@ cd med-result-ai
 
 ### 2. Create a Virtual Environment
 
-#### On Windows:
+#### On Windows
 
 ```bash
 python -m venv venv
 ```
 
-#### On Linux/macOS:
+#### On Linux/macOS
 
 ```bash
 python3 -m venv venv
@@ -61,13 +61,13 @@ python3 -m venv venv
 
 ### 3. Activate the Virtual Environment
 
-#### On Windows:
+#### On Windows (Virtual Environment)
 
 ```bash
 venv\Scripts\activate
 ```
 
-#### On Linux/macOS:
+#### On Linux/macOS (Virtual Environment)
 
 ```bash
 source venv/bin/activate
@@ -82,6 +82,7 @@ pip install -e .[dev,test]
 ```
 
 This command will install:
+
 - The main application and its core dependencies
 - Development tools (linters, formatters, etc.)
 - Testing frameworks and utilities
@@ -102,9 +103,10 @@ DEBUG=False
 
 1. Follow the installation steps above
 2. Install pre-commit hooks (if configured):
-   ```bash
-   pre-commit install
-   ```
+
+```bash
+pre-commit install
+```
 
 ## Limitations
 
@@ -135,8 +137,8 @@ For questions or feedback regarding this project, please open an issue on the Gi
 
 If you use this project in your research or wish to reference it, please cite:
 
-```
-(2026). MedResult AI: AI-Powered Medical Laboratory Result Analysis. 
+```text
+(2026). MedResult AI: AI-Powered Medical Laboratory Result Analysis.
 Master's Degree, University of Nis.
 ```
 

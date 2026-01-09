@@ -8,10 +8,10 @@ dynamic = ["version"]
 description = "Blood test result scanner."
 readme = "README.md"
 requires-python = ">=3.12"
-license = { file = "LICENSE.txt" }
+license = { file = "../LICENSE.txt" }
 authors = [
-    { name = "Rako", email = "rakoodalovic@gmail.com" }, 
-    { name = "Adriana", email = "x@x.com" }, 
+    { name = "Rako", email = "rakoodalovic@gmail.com" },
+    { name = "Adriana", email = "bogdan1petkovic@gmail.com" },
     { name = "Bogdan", email = "x@x.com" },
 ]
 keywords = ["ai", "bot"]
