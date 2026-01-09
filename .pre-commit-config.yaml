@@ -1,0 +1,90 @@
+# https://pre-commit.com/#pre-commit-configyaml---top-level
+repos:
+  # https://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args:
+          - --maxkb=600
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-case-conflict
+      # - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-illegal-windows-names
+      - id: check-json
+      - id: check-shebang-scripts-are-executable
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-vcs-permalinks
+      - id: check-xml
+      # - id: check-yaml
+      - id: debug-statements
+      - id: destroyed-symlinks
+      # - id: detect-aws-credentials
+      - id: detect-private-key
+      # - id: double-quote-string-fixer
+      - id: end-of-file-fixer
+      # - id: file-contents-sorter
+      - id: fix-byte-order-marker
+      - id: forbid-new-submodules
+      - id: forbid-submodules
+      - id: mixed-line-ending
+        args:
+          - --fix=lf
+      - id: name-tests-test
+      - id: no-commit-to-branch
+      - id: pretty-format-json
+      - id: requirements-txt-fixer
+      # - id: sort-simple-yaml
+      - id: trailing-whitespace
+
+  - repo: local
+    hooks:
+      # https://pylint.pycqa.org/en/latest/user_guide/installation/pre-commit-integration.html
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: system
+        types: [python]
+        exclude: ^docs/
+      - id: ruff-check
+        name: Ruff check
+        entry: ruff
+        args:
+          - check
+          - --config=./backend/pyproject.toml
+          - --target-version=py312
+        language: system
+        types: [python]
+        exclude: ^docs/
+      - id: ruff-format
+        name: Ruff format
+        entry: ruff
+        args:
+          - format
+          - --diff
+          - --config=./backend/pyproject.toml
+          - --target-version=py312
+        language: system
+        types: [python]
+        exclude: ^docs/
+
+  - repo: https://github.com/PyCQA/doc8
+    rev: v1.1.2
+    hooks:
+      - id: doc8
+
+  # https://github.com/asottile/pyupgrade
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.17.0
+    hooks:
+      - id: pyupgrade
+        exclude: ^docs/
+
+default_language_version:
+  python: python3.12
+files: ""
+exclude: ^responses/
