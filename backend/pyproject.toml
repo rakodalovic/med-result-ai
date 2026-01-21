@@ -5,14 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "med_result_ai"
 dynamic = ["version"]
-description = "Blood test result scanner."
+description = "Blood test result analyst."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { file = "../LICENSE.txt" }
 authors = [
     { name = "Rako", email = "rakoodalovic@gmail.com" },
-    { name = "Adriana", email = "bogdan1petkovic@gmail.com" },
-    { name = "Bogdan", email = "x@x.com" },
+    { name = "Adriana", email = "x@x.com" },
+    { name = "Bogdan", email = "bogdan1petkovic@gmail.com" },
 ]
 keywords = ["ai", "bot"]
 classifiers = [
@@ -28,7 +28,7 @@ dev = ["mypy", "pre-commit", "pyupgrade", "ruff"]
 test = ["python-dotenv", "pytest", "pytest-asyncio"]
 
 [project.urls]
-Repository = "https://github.com/med-result-ai"
+Repository = "https://github.com/MedResult-AI/med-result-ai"
 
 [tool.setuptools.packages.find]
 where = ["src"]

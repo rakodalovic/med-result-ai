@@ -1,3 +1,6 @@
+# Environment
+.env
+
 # Backend
 backend/venv/
 backend/.env
@@ -29,6 +32,7 @@ frontend/yarn-error.log*
 
 # IDE
 .idea/
+.vscode/
 CLAUDE.md
 
 # OS
