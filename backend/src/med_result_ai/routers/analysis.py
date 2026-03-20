@@ -9,6 +9,10 @@ from sqlalchemy.orm import Session
 from med_result_ai.database import get_db
 from med_result_ai.models import Analysis, BloodTest
 from med_result_ai.services.ai_service import analyze_blood_test
+from med_result_ai.services.parser import (
+    parse_blood_test_values,
+    parsed_values_to_json,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +26,8 @@ def run_analysis(
 ) -> dict[str, Any]:
     """Analyze a blood test using the LLM.
 
+    Parses biomarker values from OCR text, sends them to the
+    LLM for interpretation, and stores both in the database.
     Requires OCR to have been run first.
     """
     blood_test = db.get(BloodTest, blood_test_id)
@@ -36,6 +42,10 @@ def run_analysis(
             status_code=400,
             detail="ocr has not been run yet. run ocr first.",
         )
+
+    parsed_values = parse_blood_test_values(blood_test.ocr_text)
+
+    blood_test.parsed_data = parsed_values_to_json(parsed_values)
 
     try:
         ai_result = analyze_blood_test(blood_test.ocr_text)
@@ -59,5 +69,6 @@ def run_analysis(
     return {
         "id": analysis.id,
         "blood_test_id": blood_test.id,
+        "parsed_values": parsed_values,
         "ai_analysis": ai_result,
     }
