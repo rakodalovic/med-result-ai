@@ -35,6 +35,9 @@ frontend/yarn-error.log*
 .vscode/
 CLAUDE.md
 
+# Uploads
+uploads/
+
 # OS
 .DS_Store
 Thumbs.db
