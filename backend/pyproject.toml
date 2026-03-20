@@ -25,6 +25,7 @@ dependencies = [
     "fastapi",
     "psycopg2-binary",
     "pydantic",
+    "python-multipart",
     "pydantic-settings",
     "sqlalchemy",
     "uvicorn[standard]",

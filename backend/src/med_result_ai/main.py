@@ -1,12 +1,13 @@
 """Main FastAPI application module."""
 
-from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
 from med_result_ai.database import engine
 from med_result_ai.models import Base
+from med_result_ai.routers import upload
 
 
 @asynccontextmanager
@@ -21,6 +22,9 @@ app = FastAPI(
     description="Blood test result analyst.",
     lifespan=lifespan,
 )
+
+
+app.include_router(upload.router)
 
 
 @app.get("/health")
