@@ -43,6 +43,26 @@ regarding your medical results and health conditions.
 - pip package manager
 - Virtual environment support
 - Docker and Docker Compose (for database)
+- Tesseract OCR engine
+
+### Install Tesseract
+
+#### On Ubuntu/Debian
+
+```bash
+sudo apt install tesseract-ocr
+```
+
+#### On macOS
+
+```bash
+brew install tesseract
+```
+
+#### On Windows
+
+Download the installer from [UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
+and add it to your PATH.
 
 ## Installation
 

@@ -23,8 +23,10 @@ classifiers = [
 ]
 dependencies = [
     "fastapi",
+    "numpy",
     "opencv-python-headless",
     "pillow",
+    "pytesseract",
     "psycopg2-binary",
     "pydantic",
     "python-multipart",
