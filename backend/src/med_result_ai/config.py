@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     postgres_db: str = "medbot"
     postgres_host: str = "localhost"
     postgres_port: int = 5432
+    upload_dir: str = "uploads"
 
     @property
     def database_url(self) -> PostgresDsn:
