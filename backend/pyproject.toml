@@ -21,7 +21,14 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
 ]
-dependencies = ["fastapi", "pydantic", "uvicorn[standard]"]
+dependencies = [
+    "fastapi",
+    "psycopg2-binary",
+    "pydantic",
+    "pydantic-settings",
+    "sqlalchemy",
+    "uvicorn[standard]",
+]
 
 [project.optional-dependencies]
 dev = ["mypy", "pre-commit", "pyupgrade", "ruff"]
