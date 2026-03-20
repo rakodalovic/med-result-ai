@@ -1,7 +1,10 @@
 """Application configuration loaded from environment variables."""
 
+from dotenv import find_dotenv, load_dotenv
 from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings
+
+load_dotenv(find_dotenv(usecwd=True))
 
 
 class Settings(BaseSettings):
@@ -13,6 +16,8 @@ class Settings(BaseSettings):
     postgres_host: str = "localhost"
     postgres_port: int = 5432
     upload_dir: str = "uploads"
+    openrouter_api_key: str = ""
+    openrouter_model: str = "google/gemma-3-27b-it:free"
 
     @property
     def database_url(self) -> PostgresDsn:
@@ -25,8 +30,6 @@ class Settings(BaseSettings):
             port=self.postgres_port,
             path=self.postgres_db,
         )
-
-    model_config = {"env_file": ".env"}
 
 
 settings = Settings()

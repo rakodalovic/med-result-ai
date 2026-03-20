@@ -24,13 +24,15 @@ classifiers = [
 dependencies = [
     "fastapi",
     "numpy",
+    "openai",
     "opencv-python-headless",
     "pillow",
     "pytesseract",
     "psycopg2-binary",
     "pydantic",
-    "python-multipart",
     "pydantic-settings",
+    "python-dotenv",
+    "python-multipart",
     "sqlalchemy",
     "uvicorn[standard]",
 ]
