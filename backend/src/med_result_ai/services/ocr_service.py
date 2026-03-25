@@ -45,7 +45,8 @@ def extract_text(image_path: str) -> OcrResult:
 
     try:
         data = pytesseract.image_to_data(
-            preprocessed, output_type=pytesseract.Output.DICT
+            preprocessed,
+            output_type=pytesseract.Output.DICT,
         )
     except pytesseract.TesseractError as e:
         msg = f"ocr processing failed: {e}"
@@ -67,8 +68,8 @@ def _build_lines(
     current_confidences: list[float] = []
 
     for i, text in enumerate(data["text"]):
-        text = text.strip()
-        if not text:
+        stripped_text = text.strip()
+        if not stripped_text:
             continue
 
         line_num = data["line_num"][i]
@@ -76,9 +77,7 @@ def _build_lines(
 
         if line_num != current_line_num:
             if current_words:
-                lines.append(_finalize_line(
-                    current_words, current_confidences
-                ))
+                lines.append(_finalize_line(current_words, current_confidences))
             current_line_num = line_num
             current_words = []
             current_confidences = []

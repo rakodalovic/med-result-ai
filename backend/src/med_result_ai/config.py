@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     """Application settings."""
 
     postgres_user: str = "admin"
-    postgres_password: str = "admin"
+    postgres_password: str = "admin"  # noqa: S105
     postgres_db: str = "medbot"
     postgres_host: str = "localhost"
     postgres_port: int = 5432

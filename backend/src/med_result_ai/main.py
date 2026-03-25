@@ -7,7 +7,7 @@ from fastapi import FastAPI
 
 from med_result_ai.database import engine
 from med_result_ai.models import Base
-from med_result_ai.routers import analysis, ocr, preprocess, upload
+from med_result_ai.routers import analysis, chat, ocr, preprocess, upload
 
 
 @asynccontextmanager
@@ -25,6 +25,7 @@ app = FastAPI(
 
 
 app.include_router(analysis.router)
+app.include_router(chat.router)
 app.include_router(ocr.router)
 app.include_router(preprocess.router)
 app.include_router(upload.router)

@@ -35,7 +35,8 @@ def run_preprocessing(
 
     try:
         result = preprocess_image(
-            blood_test.image_path, save_debug=True
+            blood_test.image_path,
+            save_debug=True,
         )
     except FileNotFoundError:
         raise HTTPException(
