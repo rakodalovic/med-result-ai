@@ -12,3 +12,9 @@
 .home p {
   color: var(--text);
 }
+
+.uploaded-id {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--success);
+}
