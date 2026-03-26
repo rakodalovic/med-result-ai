@@ -3,11 +3,10 @@
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException, UploadFile
 
 from med_result_ai.config import settings
-from med_result_ai.database import get_db
+from med_result_ai.database import DbSession
 from med_result_ai.models import BloodTest
 
 router = APIRouter(prefix="/api", tags=["upload"])
@@ -17,9 +16,9 @@ MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 
 
 @router.post("/upload")
-async def upload_blood_test(
+def upload_blood_test(
     file: UploadFile,
-    db: Session = Depends(get_db),
+    db: DbSession,
 ) -> dict[str, int]:
     """Upload a blood test image.
 
@@ -32,7 +31,7 @@ async def upload_blood_test(
             detail="invalid file type. only jpeg and png are allowed.",
         )
 
-    contents = await file.read()
+    contents = file.file.read()
 
     if len(contents) > MAX_FILE_SIZE:
         raise HTTPException(

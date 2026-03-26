@@ -3,6 +3,7 @@
 import logging
 
 from openai import OpenAI
+from openai.types.chat import ChatCompletionMessageParam
 
 from med_result_ai.config import settings
 
@@ -47,19 +48,21 @@ def analyze_blood_test(ocr_text: str) -> str:
     """
     client = get_client()
 
+    messages: list[ChatCompletionMessageParam] = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {
+            "role": "user",
+            "content": (
+                "Please analyze the following blood test"
+                f" results:\n\n{ocr_text}"
+            ),
+        },
+    ]
+
     try:
         response = client.chat.completions.create(
             model=settings.openrouter_model,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {
-                    "role": "user",
-                    "content": (
-                        "Please analyze the following blood test"
-                        f" results:\n\n{ocr_text}"
-                    ),
-                },
-            ],
+            messages=messages,
         )
     except Exception as e:
         msg = f"llm api call failed: {e}"
@@ -93,7 +96,7 @@ Rules:
 def chat(
     ocr_text: str,
     ai_analysis: str | None,
-    history: list[dict[str, str]],
+    history: list[ChatCompletionMessageParam],
     user_message: str,
 ) -> str:
     """Generate a chat response with blood test context.
@@ -121,7 +124,7 @@ def chat(
         analysis_section=analysis_section,
     )
 
-    messages: list[dict[str, str]] = [
+    messages: list[ChatCompletionMessageParam] = [
         {"role": "system", "content": system},
         *history,
         {"role": "user", "content": user_message},

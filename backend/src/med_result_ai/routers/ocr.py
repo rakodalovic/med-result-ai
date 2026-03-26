@@ -3,10 +3,9 @@
 import logging
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException
 
-from med_result_ai.database import get_db
+from med_result_ai.database import DbSession
 from med_result_ai.models import BloodTest
 from med_result_ai.services.ocr_service import extract_text
 
@@ -18,7 +17,7 @@ router = APIRouter(prefix="/api", tags=["ocr"])
 @router.post("/blood-tests/{blood_test_id}/ocr")
 def run_ocr(
     blood_test_id: int,
-    db: Session = Depends(get_db),
+    db: DbSession,
 ) -> dict[str, Any]:
     """Run OCR on an uploaded blood test image.
 
@@ -41,17 +40,17 @@ def run_ocr(
 
     try:
         result = extract_text(blood_test.image_path)
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         raise HTTPException(
             status_code=404,
             detail="image file not found on disk.",
-        )
+        ) from e
     except RuntimeError as e:
         logger.exception("ocr failed for blood_test %d", blood_test_id)
         raise HTTPException(
             status_code=500,
             detail=str(e),
-        )
+        ) from e
 
     blood_test.ocr_text = result.raw_text
     db.commit()
