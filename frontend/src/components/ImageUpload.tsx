@@ -9,7 +9,7 @@ interface UploadResult {
 }
 
 interface ImageUploadProps {
-  onUploadComplete: (id: number) => void;
+  onUploadComplete: (id: number, previewUrl: string) => void;
 }
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
@@ -47,7 +47,8 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
         return;
       }
 
-      setPreview(URL.createObjectURL(file));
+      const objectUrl = URL.createObjectURL(file);
+      setPreview(objectUrl);
       setError(null);
       setStatus("uploading");
 
@@ -67,7 +68,7 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
 
         const result: UploadResult = await response.json();
         setStatus("success");
-        onUploadComplete(result.id);
+        onUploadComplete(result.id, objectUrl);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Upload failed.");
         setStatus("error");
@@ -107,12 +108,17 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
         {preview ? (
           <img src={preview} alt="Preview" className="preview" />
         ) : (
-          <div className="drop-zone-text">
-            <p className="drop-zone-title">
-              Drag and drop an image here, or click to select
-            </p>
-            <p className="drop-zone-hint">JPEG or PNG, max 10 MB</p>
-          </div>
+          <>
+            <div className="drop-zone-icon">&#8593;</div>
+            <div className="drop-zone-text">
+              <p className="drop-zone-title">
+                Drop your blood test image here
+              </p>
+              <p className="drop-zone-hint">
+                or click to browse &middot; JPEG, PNG up to 10 MB
+              </p>
+            </div>
+          </>
         )}
 
         <input
