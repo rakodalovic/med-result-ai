@@ -1,0 +1,14 @@
+.home {
+  text-align: center;
+  padding-top: 48px;
+}
+
+.home h2 {
+  font-size: 28px;
+  color: var(--text-heading);
+  margin-bottom: 8px;
+}
+
+.home p {
+  color: var(--text);
+}

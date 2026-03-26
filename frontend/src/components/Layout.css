@@ -1,0 +1,40 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+}
+
+.header h1 {
+  font-size: 20px;
+  color: var(--text-heading);
+  margin: 0;
+}
+
+.header p {
+  font-size: 14px;
+  color: var(--text);
+  margin: 0;
+}
+
+.main {
+  flex: 1;
+  padding: 24px;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 12px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text);
+}
