@@ -3,10 +3,9 @@
 import logging
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException
 
-from med_result_ai.database import get_db
+from med_result_ai.database import DbSession
 from med_result_ai.models import Analysis, BloodTest
 from med_result_ai.services.ai_service import analyze_blood_test
 
@@ -18,7 +17,7 @@ router = APIRouter(prefix="/api", tags=["analysis"])
 @router.post("/blood-tests/{blood_test_id}/analyze")
 def run_analysis(
     blood_test_id: int,
-    db: Session = Depends(get_db),
+    db: DbSession,
 ) -> dict[str, Any]:
     """Analyze a blood test using the LLM.
 
@@ -41,12 +40,13 @@ def run_analysis(
         ai_result = analyze_blood_test(blood_test.ocr_text)
     except RuntimeError as e:
         logger.exception(
-            "analysis failed for blood_test %d", blood_test_id
+            "analysis failed for blood_test %d",
+            blood_test_id,
         )
         raise HTTPException(
             status_code=500,
             detail=str(e),
-        )
+        ) from e
 
     analysis = Analysis(
         blood_test_id=blood_test.id,

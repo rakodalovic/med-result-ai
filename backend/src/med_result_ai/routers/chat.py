@@ -3,11 +3,11 @@
 import logging
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
+from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
 
-from med_result_ai.database import get_db
+from med_result_ai.database import DbSession
 from med_result_ai.models import BloodTest, Message
 from med_result_ai.services.ai_service import chat
 
@@ -26,7 +26,7 @@ class ChatRequest(BaseModel):
 @router.post("/chat")
 def send_message(
     body: ChatRequest,
-    db: Session = Depends(get_db),
+    db: DbSession,
 ) -> dict[str, Any]:
     """Send a follow-up question about a blood test.
 
@@ -48,15 +48,16 @@ def send_message(
         )
 
     latest_analysis = (
-        blood_test.analyses[-1].ai_analysis
-        if blood_test.analyses
-        else None
+        blood_test.analyses[-1].ai_analysis if blood_test.analyses else None
     )
 
-    history = [
-        {"role": msg.role, "content": msg.content}
-        for msg in sorted(blood_test.messages, key=lambda m: m.created_at)
-    ]
+    sorted_messages = sorted(blood_test.messages, key=lambda m: m.created_at)
+    history: list[ChatCompletionMessageParam] = []
+    for msg in sorted_messages:
+        if msg.role == "user":
+            history.append({"role": "user", "content": msg.content})
+        else:
+            history.append({"role": "assistant", "content": msg.content})
 
     try:
         ai_reply = chat(
@@ -66,10 +67,8 @@ def send_message(
             user_message=body.message,
         )
     except RuntimeError as e:
-        logger.exception(
-            "chat failed for blood_test %d", body.blood_test_id
-        )
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.exception("chat failed for blood_test %d", body.blood_test_id)
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
     user_msg = Message(
         blood_test_id=blood_test.id,
