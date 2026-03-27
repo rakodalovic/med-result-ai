@@ -8,41 +8,37 @@ provide general health advice.
 
 MedResult AI is a master's thesis project that combines computer vision and
 conversational AI to help users understand their medical laboratory results.
-Users can upload images of their blood test results, and the AI chatbot will:
+Users can upload images of their blood test results, and the AI will:
 
-- Extract and interpret the data from the images
+- Extract and interpret data from the images using OCR
 - Provide general explanations of what the results mean
 - Offer preliminary health advice based on the findings
-- Answer questions about specific biomarkers and values
+- Answer follow-up questions about specific biomarkers and values
 
 **Important Disclaimer**: This application is designed for educational and
 informational purposes only. It does not replace professional medical advice,
 diagnosis, or treatment. Always consult with qualified healthcare professionals
 regarding your medical results and health conditions.
 
-## Features
-
-- Image upload and processing of blood test results
-- Optical character recognition (OCR) for data extraction
-- AI-powered interpretation of laboratory values
-- Interactive chatbot interface for questions and clarifications
-- General health recommendations based on results
-- Support for common blood panel formats
-
 ## Technology Stack
 
-- Python 3.12+
-- Computer Vision and OCR libraries
-- AI/ML frameworks for natural language processing
-- Web framework for user interface
-- Image processing utilities
+**Backend**
+
+- Python 3.12+, FastAPI, Uvicorn
+- SQLAlchemy 2.0 with PostgreSQL
+- Tesseract OCR + OpenCV for image preprocessing
+- OpenRouter API (OpenAI-compatible) for LLM inference
+
+**Frontend**
+
+- React 19 + TypeScript + Vite
+- Plain CSS with dark-mode-first design
 
 ## Prerequisites
 
 - Python 3.12 or higher
-- pip package manager
-- Virtual environment support
-- Docker and Docker Compose (for database)
+- Node.js 18 or higher
+- Docker and Docker Compose (for the database)
 - Tesseract OCR engine
 
 ### Install Tesseract
@@ -73,117 +69,90 @@ git clone https://github.com/MedResult-AI/med-result-ai.git
 cd med-result-ai
 ```
 
-### 2. Create a Virtual Environment
-
-#### On Windows
+### 2. Configure Environment Variables
 
 ```bash
-python -m venv venv
+cp .env.example .env
 ```
 
-#### On Linux/macOS
+Edit `.env` and fill in your values:
 
-```bash
-python3 -m venv venv
+```env
+POSTGRES_USER="admin"
+POSTGRES_PASSWORD="admin"
+POSTGRES_DB="medbot"
+POSTGRES_HOST="localhost"
+POSTGRES_PORT=5432
+
+OPENROUTER_API_KEY="your-openrouter-api-key"
+OPENROUTER_MODEL="google/gemini-2.0-flash-001"
 ```
 
-### 3. Activate the Virtual Environment
+Get a free API key at [openrouter.ai](https://openrouter.ai).
 
-#### On Windows (Virtual Environment)
-
-```bash
-venv\Scripts\activate
-```
-
-#### On Linux/macOS (Virtual Environment)
-
-```bash
-source venv/bin/activate
-```
-
-### 4. Install Dependencies
-
-After activating the virtual environment, install the project with development
-and test dependencies:
-
-```bash
-pip install -e .[dev,test]
-```
-
-This command will install:
-
-- The main application and its core dependencies
-- Development tools (linters, formatters, etc.)
-- Testing frameworks and utilities
-
-### 5. Set Up the Database
-
-The project uses PostgreSQL for data persistence. A Docker Compose configuration
-is provided for easy local development.
-
-#### Start the Database
+### 3. Start the Database
 
 ```bash
 docker compose up -d
 ```
 
-#### Stop the Database
+### 4. Set Up the Backend
 
 ```bash
-docker compose down
+cd backend
+python3 -m venv venv
+source venv/bin/activate       # On Windows: venv\Scripts\activate
+pip install -e .[dev,test]
 ```
 
-#### Stop and Remove Data
+### 5. Set Up the Frontend
 
 ```bash
-docker compose down -v
+cd frontend
+npm install
 ```
 
-#### Check Database Status
+## Running the Application
+
+Start both servers (from the project root):
+
+**Backend** (default port `8000`):
 
 ```bash
-docker compose ps
+cd backend
+source venv/bin/activate
+uvicorn med_result_ai.main:app --reload
 ```
 
-To customize database credentials, copy `.env.example` to `.env` and modify
-as needed.
-
-## Configuration
-
-Configuration files and environment variables should be set up before running
-the application. Create a `.env` file in the root directory with the following
-structure:
-
-```env
-API_KEY=your_api_key_here
-MODEL_PATH=path/to/model
-DEBUG=False
-```
-
-## Development
-
-### Setting Up Development Environment
-
-1. Follow the installation steps above
-2. Install pre-commit hooks (if configured):
+**Frontend** (default port `5173`):
 
 ```bash
-pre-commit install
+cd frontend
+npm run dev
 ```
 
-### Code Style Guidelines
+## Usage
 
-**Line Length:**
+1. Upload an image of your blood test result (JPEG, PNG, WebP, TIFF, BMP)
+2. Wait for the AI to process and analyze the image
+3. Read the initial analysis and ask follow-up questions in the chat
 
-- Maximum 80 characters per line for all code
-- Maximum 120 characters for some documentation and docstrings
+## Database Management
 
-**VS Code Setup:**
-Add rulers to your VS Code settings to help maintain line length:
+```bash
+docker compose up -d       # Start
+docker compose down        # Stop
+docker compose down -v     # Stop and remove all data
+docker compose ps          # Check status
+```
 
-1. Open VS Code settings (JSON): `Ctrl+Shift+P` → "Preferences: Open
-   User Settings (JSON)"
-2. Add the following configuration:
+## VS Code Setup
+
+For Python import resolution, the project includes `.vscode/settings.json`
+pointing Pylance to the backend virtual environment. If you use a different
+venv path, update `python.defaultInterpreterPath` in that file.
+
+To maintain code style, add rulers to your user settings:
 
 ```json
 {
@@ -191,26 +160,20 @@ Add rulers to your VS Code settings to help maintain line length:
 }
 ```
 
-This will display vertical lines at columns 80 and 120 as visual guides
-while coding.
-
 ## Limitations
 
-- The AI provides general information only and should not be used for medical
-  diagnosis
-- Image quality affects OCR accuracy
-- Supports limited blood test formats (see documentation for full list)
-- Requires internet connection for AI processing
+- The AI provides general information only and must not be used for medical diagnosis
+- OCR accuracy depends on image quality and layout
+- Requires an internet connection for AI inference
 
 ## Contributing
 
-This is an academic project for a master's thesis. While contributions are not
-actively sought, suggestions and feedback are welcome through the issue tracker.
+This is an academic project for a master's thesis. Suggestions and feedback
+are welcome through the issue tracker.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for
-details.
+This project is licensed under the MIT License — see the LICENSE file for details.
 
 ## Acknowledgments
 
@@ -218,22 +181,13 @@ details.
 - Open-source libraries and frameworks used in this project
 - Medical professionals who provided domain expertise
 
-## Contact
-
-For questions or feedback regarding this project, please open an issue on the
-GitHub repository or contact the project maintainer.
-
 ## Citation
 
-If you use this project in your research or wish to reference it, please cite:
+If you reference this project, please cite:
 
 ```text
-(2026). MedResult AI: AI-Powered Medical Laboratory Result Analysis.
-Master's Degree, University of Nis.
+MedResult AI (2026): AI-Powered Medical Laboratory Result Analysis.
+Master's Degree, Faculty of Electronic Engineering, University of Nis.
 ```
 
 ---
-
-**Developed as part of a Master's thesis in [Your Field]**
-
-**Last Updated**: January 2026
