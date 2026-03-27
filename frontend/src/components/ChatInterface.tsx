@@ -35,6 +35,14 @@ export default function ChatInterface({
     }
   }, [disabled]);
 
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+    el.parentElement?.scrollTo(0, el.parentElement.scrollHeight);
+  }, [input]);
+
   const send = async (text: string) => {
     const userMsg: Message = {
       id: Date.now(),
@@ -106,7 +114,9 @@ export default function ChatInterface({
       <div className="messages">
         {messages.length === 0 && !disabled && (
           <div className="empty-chat">
-            <div className="empty-chat-icon">&#9764;</div>
+            <div className="empty-chat-icon">
+              <img src="/logo.png" alt="logo" />
+            </div>
             <p className="empty-chat-title">
               Ask about your blood test results
             </p>
@@ -174,6 +184,7 @@ export default function ChatInterface({
 
       <div className="chat-input-area">
         <form className="chat-input-wrapper" onSubmit={handleSubmit}>
+          <div className="chat-input-scroll">
           <textarea
             ref={inputRef}
             className="chat-input"
@@ -188,6 +199,7 @@ export default function ChatInterface({
             disabled={disabled || sending}
             rows={1}
           />
+          </div>
           <button
             type="submit"
             className="send-button"
